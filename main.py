@@ -1,16 +1,11 @@
 import keyboard
-import time
 from os import system, name
 from termcolor import cprint
 from random import randint,choice
 from random import randint
 from essentials import clear,obstacles,gate,player,world,print_world,levelCleared
 from collision import Collision
-
-
-
-
-
+from main_menu import main_menu
 
 def add_gate(world):
     length = len(world)
@@ -54,32 +49,47 @@ add_gate(world)
 print_world(world)
 
 
-try:
-    while True:
-        if keyboard.is_pressed('q'):
-            clear()
-            print("Quitting")
-            run = False
 
 
-        if keyboard.is_pressed('a'):
-            level,current_pos = get_player(world)
-            collision= Collision(world,level,current_pos)
-            collision.leftCollision()
+def play_game():
+    try:
+        clear()
+        print_world(world)
+        while True:
+            if keyboard.is_pressed('q'):
+                clear()
+                print("Quitting")
+                run = False
 
-        if keyboard.is_pressed('d'):
-            level,current_pos = get_player(world)
-            collision= Collision(world,level,current_pos)
-            collision.rightCollision()
 
-        if keyboard.is_pressed('w'):
-            level,current_pos = get_player(world)
-            collision= Collision(world,level,current_pos)
-            collision.upCollision()
+            if keyboard.is_pressed('a'):
+                level,current_pos = get_player(world)
+                collision= Collision(world,level,current_pos)
+                collision.leftCollision()
 
-        if keyboard.is_pressed('s'):
-            level,current_pos = get_player(world)
-            collision= Collision(world,level,current_pos)
-            collision.downCollision()
-except levelCleared:
-    print("level cleared")
+            if keyboard.is_pressed('d'):
+                level,current_pos = get_player(world)
+                collision= Collision(world,level,current_pos)
+                collision.rightCollision()
+
+            if keyboard.is_pressed('w'):
+                level,current_pos = get_player(world)
+                collision= Collision(world,level,current_pos)
+                collision.upCollision()
+
+            if keyboard.is_pressed('s'):
+                level,current_pos = get_player(world)
+                collision= Collision(world,level,current_pos)
+                collision.downCollision()
+    except levelCleared:
+        print("level cleared")
+
+
+if __name__ == "__main__":
+    main_menu()
+    work = input("> ")
+    if work=="1":
+        play_game()
+    elif work=="2":
+        print("Quitting")
+        exit()
