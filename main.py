@@ -4,7 +4,7 @@ from keybinds import keybinds_menu
 import keyboard
 from collision import Collision
 from random import randint,choice
-
+from player import stats
 
 def add_enemies(world,enemyy=2):
     for _ in range(enemyy):
@@ -46,7 +46,7 @@ def get_player(world) -> tuple[int,int]:
         except ValueError:
             level+=1
 
-
+health=stats["health"]
 
 def play_game():
     try:
@@ -59,32 +59,27 @@ def play_game():
                 print("Quitting")
                 run = False
 
-
             if keyboard.is_pressed('a'):
                 level,current_pos = get_player(world)
-                collision= Collision(world,level,current_pos)
+                collision= Collision(world,level,current_pos,health=health)
                 collision.leftCollision()
 
             if keyboard.is_pressed('d'):
                 level,current_pos = get_player(world)
-                collision= Collision(world,level,current_pos)
+                collision= Collision(world,level,current_pos,health)
                 collision.rightCollision()
 
             if keyboard.is_pressed('w'):
                 level,current_pos = get_player(world)
-                collision= Collision(world,level,current_pos)
+                collision= Collision(world,level,current_pos,health)
                 collision.upCollision()
 
             if keyboard.is_pressed('s'):
                 level,current_pos = get_player(world)
-                collision= Collision(world,level,current_pos)
+                collision= Collision(world,level,current_pos,health)
                 collision.downCollision()
     except levelCleared:
         print("level cleared")
-
-
-
-
 
 
 clear()
