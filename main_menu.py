@@ -22,7 +22,7 @@ def main_menu():
     """
 
     # Menu options (centered)
-    menu_options = "\n[bold yellow][1][/bold yellow] Start Game\n\n[bold yellow][2][/bold yellow] Quit\n"
+    menu_options = "\n[bold yellow][1][/bold yellow] Start Game\n\n[bold yellow][2][/bold yellow] Keybinds\n\n[bold yellow][3][/bold yellow] Quit\n"
 
     # Combine title and centered options
     menu_content = Align.center(f"[bold cyan]{rpg_title}[/bold cyan]\n{menu_options}")

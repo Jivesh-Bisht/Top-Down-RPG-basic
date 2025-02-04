@@ -1,11 +1,23 @@
-import keyboard
-from os import system, name
-from termcolor import cprint
-from random import randint,choice
-from random import randint
-from essentials import clear,obstacles,gate,player,world,print_world,levelCleared
-from collision import Collision
+from essentials import clear,print_world,obstacles,enemy,gate,player,world,levelCleared
 from main_menu import main_menu
+from keybinds import keybinds_menu
+import keyboard
+from collision import Collision
+from random import randint,choice
+
+
+def add_enemies(world,enemyy=2):
+    for _ in range(enemyy):
+        level = randint(0,(len(world)-1))
+        pos = randint(0,9)
+        if world[level][pos] in obstacles:
+            pass
+        elif (level,pos) == get_player(world):
+            pass
+        else:
+            world[level][pos] = choice(enemy)
+
+
 
 def add_gate(world):
     length = len(world)
@@ -15,7 +27,7 @@ def add_gate(world):
     
 
 def add_obstacles(world,obs=5):
-    for i in range(obs):
+    for _ in range(obs):
         level = randint(0,(len(world)-1))
         pos = randint(0,9)
         if (level,pos) == get_player(world):
@@ -34,28 +46,14 @@ def get_player(world) -> tuple[int,int]:
         except ValueError:
             level+=1
 
-def clear():
-    # for windows
-    if name == 'nt':
-        _ = system('cls')
-
-    # for mac and linux
-    else:
-        _ = system('clear')
-
-clear()
-add_obstacles(world)
-add_gate(world)
-print_world(world)
-
-
 
 
 def play_game():
     try:
         clear()
         print_world(world)
-        while True:
+        run=True
+        while run:
             if keyboard.is_pressed('q'):
                 clear()
                 print("Quitting")
@@ -85,11 +83,29 @@ def play_game():
         print("level cleared")
 
 
+
+
+
+
+clear()
+add_enemies(world)
+add_obstacles(world)
+add_gate(world)
+print_world(world)
+
 if __name__ == "__main__":
     main_menu()
     work = input("> ")
     if work=="1":
         play_game()
     elif work=="2":
+        keybinds_menu()
+        print("Continue to game??(y/n)")
+        k = input("> ")
+        if k=="y":
+            play_game()
+        else:
+            print("Quitting")
+    elif work=="3":
         print("Quitting")
-        exit()
+
