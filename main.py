@@ -1,11 +1,16 @@
 from essentials import clear,print_world,obstacles,enemy,gate,player,world,levelCleared,levelFailed
 from main_menu import main_menu
 from keybinds import keybinds_menu
-import keyboard
+import keyboard,json
 from collision import Collision
 from random import randint,choice
 from player import stats
+from stats import display_stats
 
+
+with open("stats.json") as f:
+    __ = json.load(f)
+    runs=__["runs"]
 def add_enemies(world, enemyy=2):
     for _ in range(enemyy):
         level = randint(1, len(world) - 2)  # Avoid first and last row
@@ -110,6 +115,7 @@ if __name__ == "__main__":
     main_menu()
     work = input("> ")
     if work=="1":
+        runs +=1
         play_game()
     elif work=="2":
         keybinds_menu()
@@ -119,6 +125,18 @@ if __name__ == "__main__":
             play_game()
         else:
             print("Quitting")
+
     elif work=="3":
+        display_stats()
+        print("Continue to game??(y/n)")
+        k = input("> ")
+        if k=="y":
+            play_game()
+        else:
+            print("Quitting")
+    elif work=="4":
         print("Quitting")
 
+    __["runs"] = runs
+    with open("stats.json","w") as f:
+        json.dump(__,f) 
