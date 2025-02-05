@@ -1,39 +1,21 @@
-from random import randint,choices
-from player import stats
-import time
+from fighting_logic.main import fight,player_spells,enemy_spells,player_items
+from fighting_logic.classes.game import Person
+import json
+
+
+with open("stats.json") as f:
+    stats= json.load(f)
+with open("inventory.json") as f:
+    inventory=json.load(f)
 
 
 
-def iscrit():
-    roll = choices([True,False],[int(stats["crit_chance"]),(100-int(stats["crit_chance"]))])
-    return roll
+player=Person(stats["name"],stats["hp"],stats["mp"],stats["atk"],stats["df"],player_spells,player_items)
+enemy = Person("Imp  ", 3000, 130, 560, 325, enemy_spells, [])
 
-def fight(world,print_world,current_pos,level,health):
-    enemy_health = 50
-    print("A fight has started!")
-    time.sleep(0.5)
-
-    while True:
-        action = input("Choose your action (attack/heal): ").strip().lower()
-        if action in ["attack", "heal"]:
-            break
-        else:
-            print("Invalid action. Please choose again.")
-
-    if action == "attack": 
-        time.sleep(0.5)
-        dmg=int(stats["crit_mult"]*stats["base_dmg"]) if iscrit() == True else stats["base_dmg"]
-        print(f"You chose to attack! Attacked for {dmg}")
-        enemy_health -= dmg
-        time.sleep(0.5)
-
-
-    elif action == "heal":
-        time.sleep(0.5)
-        heal=randint(1,20)
-        print(f"You chose to heal! Healed for +{heal}")
-        health+=heal
-        time.sleep(0.5)
-
-    world[level][current_pos] = "*"
-    print_world(world)
+def fightt() -> bool:
+    won=fight(player,enemy)
+    if won:
+        return True
+    else:
+        return False

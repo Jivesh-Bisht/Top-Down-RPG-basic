@@ -1,7 +1,9 @@
-from essentials import player,gate,obstacles,levelCleared,enemy,print_world
+from essentials import player,gate,obstacles,levelCleared,enemy,print_world,border,levelFailed
 import time
-from fight import fight
+from fight import fightt as fight
 from os import name,system
+
+
 def clear():
     if name == 'nt':
         _ = system('cls')
@@ -17,7 +19,6 @@ class Collision:
 
     def leftCollision(self):
         level = self.level
-        health=self.health
         current_pos=self.current_pos
         world=self.world
 
@@ -26,12 +27,19 @@ class Collision:
             print_world(world)
         else:
             clear()
-            if world[level][current_pos-1] in obstacles:
+            if world[level][current_pos-1] in obstacles or world[level][current_pos-1]==border:
                 print_world(world)
             elif world[level][current_pos-1] == gate:
                 raise levelCleared
             elif world[level][current_pos-1] == enemy:
-                fight(world,print_world,current_pos,level,health)
+                k = fight()
+                if k:
+                    world[level][current_pos] = "."
+                    world[level][current_pos-1] = player # remove the enemy
+                    clear()
+                    print_world(world)
+                else:
+                    raise levelFailed
                 
             else:
                 world[level][current_pos] = "."
@@ -43,19 +51,25 @@ class Collision:
         level = self.level
         current_pos=self.current_pos
         world=self.world
-        health=self.health
 
         if current_pos == len(world[0])-1:
             clear()
             print_world(world)
         else:
             clear()
-            if world[level][current_pos+1] in obstacles:
+            if world[level][current_pos+1] in obstacles or world[level][current_pos+1]==border:
                 print_world(world)
             elif world[level][current_pos+1] == gate:
                 raise levelCleared
             elif world[level][current_pos+1] == enemy:
-                fight(world,print_world,current_pos,level,health)
+                k = fight()
+                if k:
+                    world[level][current_pos] = "."
+                    world[level][current_pos+1] = player # remove the enemy
+                    clear()
+                    print_world(world)
+                else:
+                    raise levelFailed
             else:
                 world[level][current_pos] = "."
                 world[level][current_pos+1] = player
@@ -66,19 +80,24 @@ class Collision:
         level = self.level
         current_pos=self.current_pos
         world=self.world
-        health=self.health
-
         if level == 0:
             clear()
             print_world(world)
         else:
             clear()
-            if world[level-1][current_pos] in obstacles:
+            if world[level-1][current_pos] in obstacles or world[level-1][current_pos]==border:
                 print_world(world)
             elif world[level-1][current_pos] == gate:
                 raise levelCleared
             elif world[level-1][current_pos] == enemy:
-                fight(world,print_world,current_pos,level,health)
+                k = fight()
+                if k:
+                    world[level][current_pos] = "."
+                    world[level-1][current_pos] = player # remove the enemy
+                    clear()
+                    print_world(world)
+                else:
+                    raise levelFailed
             else:
                 world[level][current_pos] = "."
                 world[level-1][current_pos] = player
@@ -89,19 +108,25 @@ class Collision:
         level = self.level
         current_pos=self.current_pos
         world=self.world
-        health=self.health
 
         if level == (len(world)-1):
             clear()
             print_world(world)
         else:
             clear()
-            if world[level+1][current_pos] in obstacles:
+            if world[level+1][current_pos] in obstacles or world[level+1][current_pos] == border:
                 print_world(world)
             elif world[level+1][current_pos] == gate:
                 raise levelCleared
             elif world[level+1][current_pos] == enemy:
-                fight(world,print_world,current_pos,level,health)
+                k = fight()
+                if k:
+                    world[level][current_pos] = "."
+                    world[level+1][current_pos] = player # remove the enemy
+                    clear()
+                    print_world(world)
+                else:
+                    raise levelFailed
 
             else:
                 world[level][current_pos] = "."

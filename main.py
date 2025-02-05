@@ -1,4 +1,4 @@
-from essentials import clear,print_world,obstacles,enemy,gate,player,world,levelCleared
+from essentials import clear,print_world,obstacles,enemy,gate,player,world,levelCleared,levelFailed
 from main_menu import main_menu
 from keybinds import keybinds_menu
 import keyboard
@@ -6,34 +6,49 @@ from collision import Collision
 from random import randint,choice
 from player import stats
 
-def add_enemies(world,enemyy=2):
+def add_enemies(world, enemyy=2):
     for _ in range(enemyy):
-        level = randint(0,(len(world)-1))
-        pos = randint(0,9)
+        level = randint(1, len(world) - 2)  # Avoid first and last row
+        pos = randint(1, len(world[0]) - 2)  # Avoid first and last column
         if world[level][pos] in obstacles:
             pass
-        elif (level,pos) == get_player(world):
+        elif (level, pos) == get_player(world):
             pass
         else:
             world[level][pos] = choice(enemy)
 
-
-
 def add_gate(world):
     length = len(world)
-    level=randint(0,length-1)
-    print(level)
-    world[level][0]=gate
-    
-
-def add_obstacles(world,obs=5):
-    for _ in range(obs):
-        level = randint(0,(len(world)-1))
-        pos = randint(0,9)
-        if (level,pos) == get_player(world):
-            pass
+    width = len(world[0])
+    while True:
+        if randint(0, 1) == 0:
+            level = length - 1  # Last row but not the corners
+            pos = randint(1, width - 1)
         else:
-            world[level][pos] = choice(obstacles)
+            level = randint(1, length - 1)
+            pos = width - 1  # Last column but not the corners
+        if (level, pos) != (length - 2, width - 2) and (level, pos) != (length - 2, 1) and (level, pos) != (1, width - 2):
+            break
+    world[level][pos] = gate
+
+def add_obstacles(world, obs=5):
+    for _ in range(obs):
+        while True:
+            level = randint(1, len(world) - 2)  # Avoid first and last row
+            pos = randint(1, len(world[0]) - 2)  # Avoid first and last column
+            if (level, pos) == get_player(world):
+                continue
+            if world[level][pos] in obstacles:
+                continue
+            if world[level][pos] == gate:
+                continue
+            if world[level][pos] in enemy:
+                continue
+            # Ensure obstacles do not surround the gate, enemy, or player
+            if not ((world[level-1][pos] in [gate, player] and world[level+1][pos] in [gate, player] and world[level][pos-1] in [gate, player] and world[level][pos+1] in [gate, player]) or
+                    (world[level-1][pos] in enemy and world[level+1][pos] in enemy and world[level][pos-1] in enemy and world[level][pos+1] in enemy)):
+                world[level][pos] = choice(obstacles)
+                break
     
 
 
@@ -78,8 +93,11 @@ def play_game():
                 level,current_pos = get_player(world)
                 collision= Collision(world,level,current_pos,health)
                 collision.downCollision()
-    except levelCleared:
-        print("level cleared")
+    except (levelCleared,levelFailed) as e:
+        if isinstance(e,levelCleared):
+            print("level cleared")
+        else:
+            print("level failed booooooo!!")
 
 
 clear()
