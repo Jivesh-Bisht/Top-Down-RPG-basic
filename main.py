@@ -6,7 +6,7 @@ from collision import Collision
 from random import randint,choice
 from player import stats
 from stats import display_stats
-
+from inventory import display_inventory
 
 with open("stats.json") as f:
     __ = json.load(f)
@@ -78,6 +78,16 @@ def play_game():
                 clear()
                 print("Quitting")
                 run = False
+            
+            if keyboard.is_pressed('i'):
+                clear()
+                display_inventory()
+                while True:
+                    ask=input("Continue??(y) > ")
+                    if ask == "y":
+                        clear()
+                        print_world(world)
+                        break
 
             if keyboard.is_pressed('a'):
                 level,current_pos = get_player(world)
@@ -123,18 +133,28 @@ if __name__ == "__main__":
         k = input("> ")
         if k=="y":
             play_game()
+            runs +=1
         else:
             print("Quitting")
-
     elif work=="3":
+        display_inventory()
+        print("Continue to game??(y/n)")
+        k = input("> ")
+        if k=="y":
+            play_game()
+            runs +=1
+        else:
+            print("Quitting")
+    elif work=="4":
         display_stats()
         print("Continue to game??(y/n)")
         k = input("> ")
         if k=="y":
             play_game()
+            runs +=1
         else:
             print("Quitting")
-    elif work=="4":
+    elif work=="5":
         print("Quitting")
 
     __["runs"] = runs

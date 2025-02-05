@@ -1,0 +1,41 @@
+{
+    "items": [
+      {
+        "name": "Potion",
+        "type": "potion",
+        "description": "Heals 50 HP",
+        "prop": 50
+      },
+      {
+        "name": "Hi-Potion",
+        "type": "potion",
+        "description": "Heals 100 HP",
+        "prop": 100
+      },
+      {
+        "name": "Super Potion",
+        "type": "potion",
+        "description": "Heals 1000 HP",
+        "prop": 1000
+      },
+      {
+        "name": "Elixer",
+        "type": "elixer",
+        "description": "Fully restores HP/MP of one party member",
+        "prop": 9999
+      },
+      {
+        "name": "MegaElixer",
+        "type": "elixer",
+        "description": "Fully restores party's HP/MP",
+        "prop": 9999
+      },
+      {
+        "name": "Grenade",
+        "type": "attack",
+        "description": "Deals 500 damage",
+        "prop": 500
+      }
+    ]
+  }
+  

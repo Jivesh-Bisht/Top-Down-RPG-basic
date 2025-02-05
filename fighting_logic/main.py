@@ -29,6 +29,37 @@ with open("inventory.json") as f:
     inventory=json.load(f)    
 
 
+def save_inventory(player_items) -> None:
+    new_inventory=[
+    {
+        "item": "potion",
+        "quantity": player_items[0]["quantity"]
+    },
+    {
+        "item": "hipotion",
+        "quantity": player_items[1]["quantity"]
+    },
+    {
+        "item": "superpotion",
+        "quantity": player_items[2]["quantity"]
+    },
+    {
+        "item": "elixer",
+        "quantity": player_items[3]["quantity"]
+    },
+    {
+        "item": "hielixer",
+        "quantity": player_items[4]["quantity"]
+    },
+    {
+        "item": "grenade",
+        "quantity": player_items[5]["quantity"]
+    }
+]
+
+    with open("inventory.json","w") as f:
+        json.dump(new_inventory,f)   
+
 player_spells = [fire, thunder, blizzard, meteor, cure, cura]
 enemy_spells = [fire, meteor, curaga]
 player_items = [{"item": potion, "quantity": inventory[0]["quantity"]}, {"item": hipotion, "quantity": inventory[1]["quantity"]},
@@ -76,6 +107,7 @@ def fight(player,enemy) -> bool:
                 if enemy.get_hp() == 0:
                     print(enemy.name.replace(" ", "") + " has died.")
                     print("You won!")
+                    save_inventory(player_items)
                     enemy.heal(30000)
                     time.sleep(0.5)
                     return True
@@ -114,6 +146,7 @@ def fight(player,enemy) -> bool:
                     
                     if enemy.get_hp() == 0:
                         print(bcolors.FAIL + "You won!" + bcolors.ENDC)
+                        save_inventory(player_items)
                         time.sleep(0.5)
                         enemy.heal(30000)
                         running = False
@@ -165,6 +198,7 @@ def fight(player,enemy) -> bool:
         # Check if Player won
         if enemy.get_hp() == 0:
             print(bcolors.OKGREEN + "You win!" + bcolors.ENDC)
+            save_inventory(player_items)
             time.sleep(0.5)
             enemy.heal(30000)
             running = False
@@ -174,6 +208,7 @@ def fight(player,enemy) -> bool:
         # Check if Enemy won
         elif player.get_hp() == 0:
             print(bcolors.FAIL + "Your enemies have defeated you!" + bcolors.ENDC)
+            save_inventory(player_items)
             time.sleep(0.5)
             running = False
             return False
@@ -208,6 +243,7 @@ def fight(player,enemy) -> bool:
 
                     if player.get_hp() == 0:
                         print(bcolors.FAIL + "Your enemies have defeated you!" + bcolors.ENDC)
+                        save_inventory(player_items)
                         time.sleep(0.5)
                         running = False
                         return False
