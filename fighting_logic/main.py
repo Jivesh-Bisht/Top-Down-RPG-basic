@@ -77,11 +77,22 @@ player_items = [{"item": potion, "quantity": inventory[0]["quantity"]}, {"item":
 
 print(bcolors.FAIL + bcolors.BOLD + "AN ENEMY ATTACKS!" + bcolors.ENDC)
 
-def fight(player,enemy) -> bool:
+def get_valid_input(prompt, valid_range):
+    while True:
+        try:
+            choice = int(input(prompt)) - 1
+            if choice in valid_range:
+                return choice
+            else:
+                print(bcolors.FAIL + "Invalid choice. Please try again." + bcolors.ENDC)
+        except ValueError:
+            print(bcolors.FAIL + "Invalid input. Please enter a number." + bcolors.ENDC)
+
+def fight(player, enemy) -> bool:
     running = True
     i = 0
-    enemies=[enemy]
-    players=[player]
+    enemies = [enemy]
+    players = [player]
     while running:
         print("======================")
 
@@ -94,8 +105,7 @@ def fight(player,enemy) -> bool:
         time.sleep(0.5)
         for player in players:
             player.choose_action()
-            choice = input("    Choose action: ")
-            index = int(choice) - 1
+            index = get_valid_input("    Choose action: ", range(3))
 
             if index == 0:
                 dmg = player.generate_damage()
@@ -114,7 +124,7 @@ def fight(player,enemy) -> bool:
 
             elif index == 1:
                 player.choose_magic()
-                magic_choice = int(input("    Choose magic: ")) - 1
+                magic_choice = get_valid_input("    Choose magic: ", range(len(player.magic)))
 
                 if magic_choice == -1:
                     continue
@@ -128,7 +138,6 @@ def fight(player,enemy) -> bool:
                     print(bcolors.FAIL + "\nNot enough MP\n" + bcolors.ENDC)
                     time.sleep(0.5)
                     continue
-                
 
                 player.reduce_mp(spell.cost)
 
@@ -137,13 +146,10 @@ def fight(player,enemy) -> bool:
                     print(bcolors.OKBLUE + "\n" + spell.name + " heals for", str(magic_dmg), "HP." + bcolors.ENDC)
                     time.sleep(0.5)
                 elif spell.type == "black":
-
-
                     enemy.take_damage(magic_dmg)
-
                     print(bcolors.OKBLUE + "\n" + spell.name + " deals", str(magic_dmg), "points of damage to " + enemy.name.replace(" ", "") + bcolors.ENDC)
                     time.sleep(0.5)
-                    
+
                     if enemy.get_hp() == 0:
                         print(bcolors.FAIL + "You won!" + bcolors.ENDC)
                         save_inventory(player_items)
@@ -154,7 +160,7 @@ def fight(player,enemy) -> bool:
 
             elif index == 2:
                 player.choose_item()
-                item_choice = int(input("    Choose item: ")) - 1
+                item_choice = get_valid_input("    Choose item: ", range(len(player.items)))
 
                 if item_choice == -1:
                     time.sleep(0.5)
@@ -175,7 +181,6 @@ def fight(player,enemy) -> bool:
                     print(bcolors.OKGREEN + "\n" + item.name + " heals for", str(item.prop), "HP" + bcolors.ENDC)
                     time.sleep(0.5)
                 elif item.type == "elixer":
-
                     if item.name == "MegaElixer":
                         for i in players:
                             i.hp = i.maxhp
@@ -187,13 +192,10 @@ def fight(player,enemy) -> bool:
                     time.sleep(0.5)
                 elif item.type == "attack":
                     enemy.take_damage(item.prop)
-
                     print(bcolors.FAIL + "\n" + item.name + " deals", str(item.prop), "points of damage to " + enemy.name + bcolors.ENDC)
                     time.sleep(0.5)
                     if enemy.get_hp() == 0:
                         print(enemy.name.replace(" ", "") + " has died.")
-
-
 
         # Check if Player won
         if enemy.get_hp() == 0:
@@ -203,7 +205,6 @@ def fight(player,enemy) -> bool:
             enemy.heal(30000)
             running = False
             return True
-
 
         # Check if Enemy won
         elif player.get_hp() == 0:
@@ -235,9 +236,7 @@ def fight(player,enemy) -> bool:
                     print(bcolors.OKBLUE + spell.name + " heals " + enemy.name + " for", str(magic_dmg), "HP." + bcolors.ENDC)
                     time.sleep(0.5)
                 elif spell.type == "black":
-
                     player.take_damage(magic_dmg)
-
                     print(bcolors.OKBLUE + "\n" + enemy.name.replace(" ", "") + "'s " + spell.name + " deals", str(magic_dmg), "points of damage to " + player.name.replace(" ", "") + bcolors.ENDC)
                     time.sleep(0.5)
 
